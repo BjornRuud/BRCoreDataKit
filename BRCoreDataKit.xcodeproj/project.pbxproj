@@ -60,6 +60,7 @@
 		8E39DD32198FE1C30069AB14 /* NSManagedObject+BRCoreDataKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSManagedObject+BRCoreDataKit.m"; path = "Categories/NSManagedObject+BRCoreDataKit.m"; sourceTree = "<group>"; };
 		8E39DD3519903A070069AB14 /* BRDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRDebug.h; sourceTree = "<group>"; };
 		8E39DD3619903A070069AB14 /* BRDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRDebug.m; sourceTree = "<group>"; };
+		8E39DD39199049830069AB14 /* BRCoreDataKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BRCoreDataKit.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +118,7 @@
 		8E39DD08198FBEA20069AB14 /* BRCoreDataKit */ = {
 			isa = PBXGroup;
 			children = (
+				8E39DD39199049830069AB14 /* BRCoreDataKit.h */,
 				8E39DD2C198FBEF10069AB14 /* BRCoreDataStack.h */,
 				8E39DD2D198FBEF10069AB14 /* BRCoreDataStack.m */,
 				8E39DD3519903A070069AB14 /* BRDebug.h */,
