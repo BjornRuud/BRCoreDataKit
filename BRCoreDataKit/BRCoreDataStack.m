@@ -39,13 +39,16 @@ static BRCoreDataStack *_defaultStack = nil;
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         dispatch_async(queue, ^{
             DLog(@"Begin Core Data setup");
+            dispatch_queue_t mainQueue = dispatch_get_main_queue();
 
             NSManagedObjectModel *mom = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
             if (!mom) {
                 if (completion) {
-                    NSString *message = NSLocalizedString(@"Failed to initialize managed object model %@", nil);
-                    message = [NSString stringWithFormat:message, [modelURL absoluteString]];
-                    completion([self errorWithMessage:message]);
+                    dispatch_async(mainQueue, ^{
+                        NSString *message = NSLocalizedString(@"Failed to initialize managed object model %@", nil);
+                        message = [NSString stringWithFormat:message, [modelURL absoluteString]];
+                        completion([self errorWithMessage:message]);
+                    });
                 }
                 return;
             }
@@ -54,8 +57,10 @@ static BRCoreDataStack *_defaultStack = nil;
             NSPersistentStoreCoordinator *psc = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:mom];
             if (!psc) {
                 if (completion) {
-                    NSString *message = NSLocalizedString(@"Failed to initialize persistent store coordinator", nil);
-                    completion([self errorWithMessage:message]);
+                    dispatch_async(mainQueue, ^{
+                        NSString *message = NSLocalizedString(@"Failed to initialize persistent store coordinator", nil);
+                        completion([self errorWithMessage:message]);
+                    });
                 }
                 return;
             }
@@ -68,11 +73,11 @@ static BRCoreDataStack *_defaultStack = nil;
                                                                options:nil
                                                                  error:&error];
             if (!store) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (completion) {
+                if (completion) {
+                    dispatch_async(mainQueue, ^{
                         completion(error);
-                    }
-                });
+                    });
+                }
                 return;
             }
             DLog(@"Persistent store added to coordinator");
@@ -89,12 +94,12 @@ static BRCoreDataStack *_defaultStack = nil;
 
             // Finalize on main thread
             _isInitialized = YES;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                DLog(@"End Core Data setup");
-                if (completion) {
+            DLog(@"End Core Data setup");
+            if (completion) {
+                dispatch_async(mainQueue, ^{
                     completion(nil);
-                }
-            });
+                });
+            }
         });
     }
 
