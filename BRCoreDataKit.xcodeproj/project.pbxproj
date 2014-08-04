@@ -8,14 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		8E39DD07198FBEA20069AB14 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E39DD06198FBEA20069AB14 /* Foundation.framework */; };
-		8E39DD0C198FBEA20069AB14 /* BRCoreDataKit.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8E39DD0B198FBEA20069AB14 /* BRCoreDataKit.h */; };
-		8E39DD0E198FBEA20069AB14 /* BRCoreDataKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E39DD0D198FBEA20069AB14 /* BRCoreDataKit.m */; };
 		8E39DD15198FBEA20069AB14 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E39DD14198FBEA20069AB14 /* XCTest.framework */; };
 		8E39DD16198FBEA20069AB14 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E39DD06198FBEA20069AB14 /* Foundation.framework */; };
 		8E39DD18198FBEA20069AB14 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E39DD17198FBEA20069AB14 /* UIKit.framework */; };
 		8E39DD1B198FBEA20069AB14 /* libBRCoreDataKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E39DD03198FBEA20069AB14 /* libBRCoreDataKit.a */; };
 		8E39DD21198FBEA20069AB14 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8E39DD1F198FBEA20069AB14 /* InfoPlist.strings */; };
 		8E39DD23198FBEA20069AB14 /* BRCoreDataKitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E39DD22198FBEA20069AB14 /* BRCoreDataKitTests.m */; };
+		8E39DD2E198FBEF10069AB14 /* BRCoreDataStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E39DD2D198FBEF10069AB14 /* BRCoreDataStack.m */; };
+		8E39DD2F198FBEF10069AB14 /* BRCoreDataStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E39DD2D198FBEF10069AB14 /* BRCoreDataStack.m */; };
+		8E39DD33198FE1C30069AB14 /* NSManagedObject+BRCoreDataKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E39DD32198FE1C30069AB14 /* NSManagedObject+BRCoreDataKit.m */; };
+		8E39DD34198FE1C30069AB14 /* NSManagedObject+BRCoreDataKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E39DD32198FE1C30069AB14 /* NSManagedObject+BRCoreDataKit.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,7 +37,6 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
-				8E39DD0C198FBEA20069AB14 /* BRCoreDataKit.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -45,14 +46,16 @@
 		8E39DD03198FBEA20069AB14 /* libBRCoreDataKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBRCoreDataKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E39DD06198FBEA20069AB14 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		8E39DD0A198FBEA20069AB14 /* BRCoreDataKit-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BRCoreDataKit-Prefix.pch"; sourceTree = "<group>"; };
-		8E39DD0B198FBEA20069AB14 /* BRCoreDataKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BRCoreDataKit.h; sourceTree = "<group>"; };
-		8E39DD0D198FBEA20069AB14 /* BRCoreDataKit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BRCoreDataKit.m; sourceTree = "<group>"; };
 		8E39DD13198FBEA20069AB14 /* BRCoreDataKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BRCoreDataKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E39DD14198FBEA20069AB14 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		8E39DD17198FBEA20069AB14 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		8E39DD1E198FBEA20069AB14 /* BRCoreDataKitTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BRCoreDataKitTests-Info.plist"; sourceTree = "<group>"; };
 		8E39DD20198FBEA20069AB14 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		8E39DD22198FBEA20069AB14 /* BRCoreDataKitTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BRCoreDataKitTests.m; sourceTree = "<group>"; };
+		8E39DD2C198FBEF10069AB14 /* BRCoreDataStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRCoreDataStack.h; sourceTree = "<group>"; };
+		8E39DD2D198FBEF10069AB14 /* BRCoreDataStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRCoreDataStack.m; sourceTree = "<group>"; };
+		8E39DD31198FE1C30069AB14 /* NSManagedObject+BRCoreDataKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSManagedObject+BRCoreDataKit.h"; path = "Categories/NSManagedObject+BRCoreDataKit.h"; sourceTree = "<group>"; };
+		8E39DD32198FE1C30069AB14 /* NSManagedObject+BRCoreDataKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSManagedObject+BRCoreDataKit.m"; path = "Categories/NSManagedObject+BRCoreDataKit.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,8 +113,9 @@
 		8E39DD08198FBEA20069AB14 /* BRCoreDataKit */ = {
 			isa = PBXGroup;
 			children = (
-				8E39DD0B198FBEA20069AB14 /* BRCoreDataKit.h */,
-				8E39DD0D198FBEA20069AB14 /* BRCoreDataKit.m */,
+				8E39DD2C198FBEF10069AB14 /* BRCoreDataStack.h */,
+				8E39DD2D198FBEF10069AB14 /* BRCoreDataStack.m */,
+				8E39DD30198FE17F0069AB14 /* Categories */,
 				8E39DD09198FBEA20069AB14 /* Supporting Files */,
 			);
 			path = BRCoreDataKit;
@@ -141,6 +145,15 @@
 				8E39DD1F198FBEA20069AB14 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		8E39DD30198FE17F0069AB14 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				8E39DD31198FE1C30069AB14 /* NSManagedObject+BRCoreDataKit.h */,
+				8E39DD32198FE1C30069AB14 /* NSManagedObject+BRCoreDataKit.m */,
+			);
+			name = Categories;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -224,7 +237,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8E39DD0E198FBEA20069AB14 /* BRCoreDataKit.m in Sources */,
+				8E39DD2E198FBEF10069AB14 /* BRCoreDataStack.m in Sources */,
+				8E39DD33198FE1C30069AB14 /* NSManagedObject+BRCoreDataKit.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -232,7 +246,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E39DD34198FE1C30069AB14 /* NSManagedObject+BRCoreDataKit.m in Sources */,
 				8E39DD23198FBEA20069AB14 /* BRCoreDataKitTests.m in Sources */,
+				8E39DD2F198FBEF10069AB14 /* BRCoreDataStack.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
