@@ -18,6 +18,8 @@
 		8E39DD2F198FBEF10069AB14 /* BRCoreDataStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E39DD2D198FBEF10069AB14 /* BRCoreDataStack.m */; };
 		8E39DD33198FE1C30069AB14 /* NSManagedObject+BRCoreDataKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E39DD32198FE1C30069AB14 /* NSManagedObject+BRCoreDataKit.m */; };
 		8E39DD34198FE1C30069AB14 /* NSManagedObject+BRCoreDataKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E39DD32198FE1C30069AB14 /* NSManagedObject+BRCoreDataKit.m */; };
+		8E39DD3719903A070069AB14 /* BRDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E39DD3619903A070069AB14 /* BRDebug.m */; };
+		8E39DD3819903A070069AB14 /* BRDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E39DD3619903A070069AB14 /* BRDebug.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +58,8 @@
 		8E39DD2D198FBEF10069AB14 /* BRCoreDataStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRCoreDataStack.m; sourceTree = "<group>"; };
 		8E39DD31198FE1C30069AB14 /* NSManagedObject+BRCoreDataKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSManagedObject+BRCoreDataKit.h"; path = "Categories/NSManagedObject+BRCoreDataKit.h"; sourceTree = "<group>"; };
 		8E39DD32198FE1C30069AB14 /* NSManagedObject+BRCoreDataKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSManagedObject+BRCoreDataKit.m"; path = "Categories/NSManagedObject+BRCoreDataKit.m"; sourceTree = "<group>"; };
+		8E39DD3519903A070069AB14 /* BRDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRDebug.h; sourceTree = "<group>"; };
+		8E39DD3619903A070069AB14 /* BRDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRDebug.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +119,8 @@
 			children = (
 				8E39DD2C198FBEF10069AB14 /* BRCoreDataStack.h */,
 				8E39DD2D198FBEF10069AB14 /* BRCoreDataStack.m */,
+				8E39DD3519903A070069AB14 /* BRDebug.h */,
+				8E39DD3619903A070069AB14 /* BRDebug.m */,
 				8E39DD30198FE17F0069AB14 /* Categories */,
 				8E39DD09198FBEA20069AB14 /* Supporting Files */,
 			);
@@ -238,6 +244,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8E39DD2E198FBEF10069AB14 /* BRCoreDataStack.m in Sources */,
+				8E39DD3719903A070069AB14 /* BRDebug.m in Sources */,
 				8E39DD33198FE1C30069AB14 /* NSManagedObject+BRCoreDataKit.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -249,6 +256,7 @@
 				8E39DD34198FE1C30069AB14 /* NSManagedObject+BRCoreDataKit.m in Sources */,
 				8E39DD23198FBEA20069AB14 /* BRCoreDataKitTests.m in Sources */,
 				8E39DD2F198FBEF10069AB14 /* BRCoreDataStack.m in Sources */,
+				8E39DD3819903A070069AB14 /* BRDebug.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
