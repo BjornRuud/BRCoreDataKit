@@ -7,4 +7,4 @@
 //
 
 #import "BRCoreDataStack.h"
-#import "NSManagedObject+BRCoreDataKit"
+#import "NSManagedObject+BRCoreDataKit.h"
