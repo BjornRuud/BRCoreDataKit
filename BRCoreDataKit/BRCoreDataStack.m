@@ -9,8 +9,15 @@
 #import "BRCoreDataStack.h"
 
 NSString * const BRCoreDataStackErrorDomain = @"net.bjornruud.BRCoreDataStack";
+NSString * const BRCoreDataStackInitializedNotification = @"BRCoreDataStackInitializedNotification";
 
 static BRCoreDataStack *_defaultStack = nil;
+
+@interface BRCoreDataStack ()
+
+@property (nonatomic, readwrite) BOOL isInitialized;
+
+@end
 
 @implementation BRCoreDataStack
 
@@ -93,13 +100,15 @@ static BRCoreDataStack *_defaultStack = nil;
             [nc addObserver:self selector:@selector(processContextDidSaveNotification:) name:NSManagedObjectContextDidSaveNotification object:nil];
 
             // Finalize on main thread
-            _isInitialized = YES;
-            DLog(@"End Core Data setup");
-            if (completion) {
-                dispatch_async(mainQueue, ^{
+            dispatch_async(mainQueue, ^{
+                self.isInitialized = YES;
+                NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+                [nc postNotificationName:BRCoreDataStackInitializedNotification object:self];
+                DLog(@"End Core Data setup");
+                if (completion) {
                     completion(nil);
-                });
-            }
+                }
+            });
         });
     }
 

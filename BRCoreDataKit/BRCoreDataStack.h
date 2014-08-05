@@ -9,6 +9,7 @@
 #import <CoreData/CoreData.h>
 
 FOUNDATION_EXPORT NSString * const BRCoreDataStackErrorDomain;
+FOUNDATION_EXPORT NSString * const BRCoreDataStackInitializedNotification;
 
 @interface BRCoreDataStack : NSObject
 

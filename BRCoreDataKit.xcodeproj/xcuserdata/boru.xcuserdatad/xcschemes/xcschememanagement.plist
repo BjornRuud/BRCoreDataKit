@@ -9,6 +9,11 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>BRCoreDataKitDemo.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
@@ -18,6 +23,16 @@
 			<true/>
 		</dict>
 		<key>8E39DD12198FBEA20069AB14</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>8E39DD3D1990EB340069AB14</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>8E39DD601990EB340069AB14</key>
 		<dict>
 			<key>primary</key>
 			<true/>

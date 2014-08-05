@@ -38,6 +38,16 @@
                ReferencedContainer = "container:BRCoreDataKit.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "8E39DD601990EB340069AB14"
+               BuildableName = "BRCoreDataKitDemoTests.xctest"
+               BlueprintName = "BRCoreDataKitDemoTests"
+               ReferencedContainer = "container:BRCoreDataKit.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
