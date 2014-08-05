@@ -56,45 +56,51 @@ NSString * const BRCoreDataKitQueryOptionSortDescriptors = @"BRCoreDataKitQueryO
 
 #pragma mark - Synchronous query methods
 
-+ (id)objectWhere:(NSPredicate *)predicate
-          options:(NSDictionary *)options
-        inContext:(NSManagedObjectContext *)context
++ (id)objectInContext:(NSManagedObjectContext *)context
+              options:(NSDictionary *)options
+                where:(id)predicate
+            arguments:(va_list)args
 {
-    NSAssert(predicate, @"Predicate required");
-    NSAssert(context, @"Context required");
-
     NSMutableDictionary *optionsWithLimit = [NSMutableDictionary dictionaryWithDictionary:options];
     optionsWithLimit[BRCoreDataKitQueryOptionLimit] = @1;
+    NSArray *objects = [self objectsInContext:context options:optionsWithLimit where:predicate arguments:args];
 
-    NSFetchRequest *fetch = [NSFetchRequest fetchRequestWithEntityName:[self entityName]];
-    [self configureFetch:fetch withPredicate:predicate options:optionsWithLimit];
+    return [objects firstObject];
+}
 
-    __block id object = nil;
-    [context performBlockAndWait:^{
-        NSError *error = nil;
-        NSArray *objects = [context executeFetchRequest:fetch error:&error];
-        if (!objects) {
-            DLog(@"Fetch failed: %@", [error localizedDescription]);
-        }
-        object = [objects count] ? objects[0] : nil;
-    }];
-
++ (id)objectInContext:(NSManagedObjectContext *)context
+              options:(NSDictionary *)options
+                where:(id)predicate, ...
+{
+    va_list args;
+    va_start(args, predicate);
+    id object = [self objectInContext:context options:options where:predicate arguments:args];
+    va_end(args);
     return object;
 }
 
-+ (id)objectWhere:(NSPredicate *)predicate
-          options:(NSDictionary *)options
++ (id)objectInContext:(NSManagedObjectContext *)context
+                where:(id)predicate, ...
 {
-    return [self objectWhere:predicate options:options inContext:[BRCoreDataStack defaultStack].privateQueueContext];
+    va_list args;
+    va_start(args, predicate);
+    id object = [self objectInContext:context options:nil where:predicate arguments:args];
+    va_end(args);
+    return object;
 }
 
-+ (id)objectWhere:(NSPredicate *)predicate
++ (id)objectWhere:(id)predicate, ...
 {
-    return [self objectWhere:predicate options:nil];
+    va_list args;
+    va_start(args, predicate);
+    id object = [self objectInContext:[BRCoreDataStack defaultStack].privateQueueContext options:nil where:predicate arguments:args];
+    va_end(args);
+    return object;
 }
 
-+ (id)objectWithID:(NSManagedObjectID *)objectID
-         inContext:(NSManagedObjectContext *)context
+
++ (id)objectInContext:(NSManagedObjectContext *)context
+               withID:(NSManagedObjectID *)objectID
 {
     NSAssert(objectID, @"ObjectID required");
     NSAssert(context, @"Context required");
@@ -109,18 +115,27 @@ NSString * const BRCoreDataKitQueryOptionSortDescriptors = @"BRCoreDataKitQueryO
 
 + (id)objectWithID:(NSManagedObjectID *)objectID
 {
-    return [self objectWithID:objectID inContext:[BRCoreDataStack defaultStack].privateQueueContext];
+    return [self objectInContext:[BRCoreDataStack defaultStack].privateQueueContext withID:objectID ];
 }
 
-+ (NSArray *)objectsWhere:(NSPredicate *)predicate
-                  options:(NSDictionary *)options
-                inContext:(NSManagedObjectContext *)context
++ (NSArray *)objectsInContext:(NSManagedObjectContext *)context
+                      options:(NSDictionary *)options
+                        where:(id)predicate
+                    arguments:(va_list)args
 {
-    NSAssert(predicate, @"Predicate required");
     NSAssert(context, @"Context required");
+    NSAssert(predicate, @"Predicate required");
+    NSPredicate *pred = nil;
+    if ([predicate isKindOfClass:[NSPredicate class]]) {
+        pred = predicate;
+    } else if ([predicate isKindOfClass:[NSString class]]) {
+        pred = [NSPredicate predicateWithFormat:predicate arguments:args];
+    } else {
+        NSAssert(NO, @"Predicate must be NSPredicate or NSString");
+    }
 
     NSFetchRequest *fetch = [NSFetchRequest fetchRequestWithEntityName:[self entityName]];
-    [self configureFetch:fetch withPredicate:predicate options:options];
+    [self configureFetch:fetch withPredicate:pred options:options];
 
     __block NSArray *objects = nil;
     [context performBlockAndWait:^{
@@ -134,66 +149,71 @@ NSString * const BRCoreDataKitQueryOptionSortDescriptors = @"BRCoreDataKitQueryO
     return objects;
 }
 
-+ (NSArray *)objectsWhere:(NSPredicate *)predicate
-                  options:(NSDictionary *)options
++ (NSArray *)objectsInContext:(NSManagedObjectContext *)context
+                      options:(NSDictionary *)options
+                        where:(id)predicate, ...
 {
-    return [self objectsWhere:predicate options:options inContext:[BRCoreDataStack defaultStack].privateQueueContext];
+    va_list args;
+    va_start(args, predicate);
+    NSArray *objects = [self objectsInContext:context options:options where:predicate arguments:args];
+    va_end(args);
+    return objects;
 }
 
-+ (NSArray *)objectsWhere:(NSPredicate *)predicate
++ (NSArray *)objectsInContext:(NSManagedObjectContext *)context
+                        where:(id)predicate, ...
 {
-    return [self objectsWhere:predicate options:nil];
+    va_list args;
+    va_start(args, predicate);
+    NSArray *objects = [self objectsInContext:context options:nil where:predicate arguments:args];
+    va_end(args);
+    return objects;
+}
+
++ (NSArray *)objectsWhere:(id)predicate, ...
+{
+    va_list args;
+    va_start(args, predicate);
+    NSArray *objects = [self objectsInContext:[BRCoreDataStack defaultStack].privateQueueContext options:nil where:predicate arguments:args];
+    va_end(args);
+    return objects;
 }
 
 #pragma mark - Asynchronous query methods
 
-+ (void)objectWhere:(NSPredicate *)predicate
-            options:(NSDictionary *)options
-          inContext:(NSManagedObjectContext *)context
-         completion:(void (^)(id object))completion
++ (void)objectInContext:(NSManagedObjectContext *)context
+                  where:(NSPredicate *)predicate
+                options:(NSDictionary *)options
+             completion:(void (^)(id object))completion
 {
-    NSAssert(predicate, @"Predicate required");
-    NSAssert(context, @"Context required");
-    NSAssert(completion, @"Completion block required");
-
     NSMutableDictionary *optionsWithLimit = [NSMutableDictionary dictionaryWithDictionary:options];
     optionsWithLimit[BRCoreDataKitQueryOptionLimit] = @1;
 
-    NSFetchRequest *fetch = [NSFetchRequest fetchRequestWithEntityName:[self entityName]];
-    [self configureFetch:fetch withPredicate:predicate options:optionsWithLimit];
-
-    [context performBlock:^{
-        NSError *error = nil;
-        NSArray *objects = [context executeFetchRequest:fetch error:&error];
-        if (!objects) {
-            DLog(@"Fetch failed: %@", [error localizedDescription]);
-        }
-        id object = [objects count] ? objects[0] : nil;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            completion(object);
-        });
+    [self objectsInContext:context where:predicate options:optionsWithLimit completion:^(NSArray *objects) {
+        id object = [objects firstObject];
+        completion(object);
     }];
 }
 
-+ (void)objectWhere:(NSPredicate *)predicate
-            options:(NSDictionary *)options
-         completion:(void (^)(id object))completion
++ (void)objectInContext:(NSManagedObjectContext *)context
+                  where:(NSPredicate *)predicate
+             completion:(void (^)(id object))completion
 {
-    [self objectWhere:predicate options:options inContext:[BRCoreDataStack defaultStack].privateQueueContext completion:completion];
+    [self objectInContext:context where:predicate options:nil completion:completion];
 }
 
 + (void)objectWhere:(NSPredicate *)predicate
          completion:(void (^)(id object))completion
 {
-    [self objectWhere:predicate options:nil completion:completion];
+    [self objectInContext:[BRCoreDataStack defaultStack].privateQueueContext where:predicate options:nil completion:completion];
 }
 
-+ (void)objectWithID:(NSManagedObjectID *)objectID
-           inContext:(NSManagedObjectContext *)context
-          completion:(void (^)(id object))completion
++ (void)objectInContext:(NSManagedObjectContext *)context
+                 withID:(NSManagedObjectID *)objectID
+             completion:(void (^)(id object))completion
 {
-    NSAssert(objectID, @"ObjectID required");
     NSAssert(context, @"Context required");
+    NSAssert(objectID, @"ObjectID required");
     NSAssert(completion, @"Completion block required");
 
     [context performBlock:^{
@@ -207,16 +227,16 @@ NSString * const BRCoreDataKitQueryOptionSortDescriptors = @"BRCoreDataKitQueryO
 + (void)objectWithID:(NSManagedObjectID *)objectID
           completion:(void (^)(id object))completion
 {
-    [self objectWithID:objectID inContext:[BRCoreDataStack defaultStack].privateQueueContext completion:completion];
+    [self objectInContext:[BRCoreDataStack defaultStack].privateQueueContext withID:objectID completion:completion];
 }
 
-+ (void)objectsWhere:(NSPredicate *)predicate
-             options:(NSDictionary *)options
-           inContext:(NSManagedObjectContext *)context
-          completion:(void (^)(NSArray *objects))completion
++ (void)objectsInContext:(NSManagedObjectContext *)context
+                   where:(NSPredicate *)predicate
+                 options:(NSDictionary *)options
+              completion:(void (^)(NSArray *objects))completion
 {
-    NSAssert(predicate, @"Predicate required");
     NSAssert(context, @"Context required");
+    NSAssert(predicate, @"Predicate required");
     NSAssert(completion, @"Completion block required");
 
     NSFetchRequest *fetch = [NSFetchRequest fetchRequestWithEntityName:[self entityName]];
@@ -234,17 +254,17 @@ NSString * const BRCoreDataKitQueryOptionSortDescriptors = @"BRCoreDataKitQueryO
     }];
 }
 
-+ (void)objectsWhere:(NSPredicate *)predicate
-             options:(NSDictionary *)options
-          completion:(void (^)(NSArray *objects))completion
++ (void)objectsInContext:(NSManagedObjectContext *)context
+                   where:(NSPredicate *)predicate
+              completion:(void (^)(NSArray *objects))completion
 {
-    [self objectsWhere:predicate options:options inContext:[BRCoreDataStack defaultStack].privateQueueContext completion:completion];
+    [self objectsInContext:context where:predicate options:nil completion:completion];
 }
 
 + (void)objectsWhere:(NSPredicate *)predicate
           completion:(void (^)(NSArray *objects))completion
 {
-    [self objectsWhere:predicate options:nil completion:completion];
+    [self objectsInContext:[BRCoreDataStack defaultStack].privateQueueContext where:predicate options:nil completion:completion];
 }
 
 @end

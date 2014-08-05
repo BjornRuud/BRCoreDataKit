@@ -25,58 +25,58 @@ FOUNDATION_EXPORT NSString * const BRCoreDataKitQueryOptionSortDescriptors;
 
 #pragma mark - Synchronous query methods
 
-+ (id)objectWhere:(NSPredicate *)predicate
-          options:(NSDictionary *)options
-        inContext:(NSManagedObjectContext *)context;
++ (id)objectInContext:(NSManagedObjectContext *)context
+              options:(NSDictionary *)options
+                where:(id)predicate, ...;
 
-+ (id)objectWhere:(NSPredicate *)predicate
-          options:(NSDictionary *)options;
++ (id)objectInContext:(NSManagedObjectContext *)context
+                where:(id)predicate, ...;
 
-+ (id)objectWhere:(NSPredicate *)predicate;
++ (id)objectWhere:(id)predicate, ...;
 
-+ (id)objectWithID:(NSManagedObjectID *)objectID
-         inContext:(NSManagedObjectContext *)context;
++ (id)objectInContext:(NSManagedObjectContext *)context
+               withID:(NSManagedObjectID *)objectID;
 
 + (id)objectWithID:(NSManagedObjectID *)objectID;
 
-+ (NSArray *)objectsWhere:(NSPredicate *)predicate
-                  options:(NSDictionary *)options
-                inContext:(NSManagedObjectContext *)context;
++ (NSArray *)objectsInContext:(NSManagedObjectContext *)context
+                      options:(NSDictionary *)options
+                        where:(id)predicate, ...;
 
-+ (NSArray *)objectsWhere:(NSPredicate *)predicate
-                  options:(NSDictionary *)options;
++ (NSArray *)objectsInContext:(NSManagedObjectContext *)context
+                        where:(id)predicate, ...;
 
-+ (NSArray *)objectsWhere:(NSPredicate *)predicate;
++ (NSArray *)objectsWhere:(id)predicate, ...;
 
 #pragma mark - Asynchronous query methods
 
-+ (void)objectWhere:(NSPredicate *)predicate
-            options:(NSDictionary *)options
-          inContext:(NSManagedObjectContext *)context
-         completion:(void (^)(id object))completion;
++ (void)objectInContext:(NSManagedObjectContext *)context
+                  where:(NSPredicate *)predicate
+                options:(NSDictionary *)options
+             completion:(void (^)(id object))completion;
+
++ (void)objectInContext:(NSManagedObjectContext *)context
+                  where:(NSPredicate *)predicate
+             completion:(void (^)(id object))completion;
 
 + (void)objectWhere:(NSPredicate *)predicate
-            options:(NSDictionary *)options
          completion:(void (^)(id object))completion;
 
-+ (void)objectWhere:(NSPredicate *)predicate
-         completion:(void (^)(id object))completion;
++ (void)objectInContext:(NSManagedObjectContext *)context
+                 withID:(NSManagedObjectID *)objectID
+             completion:(void (^)(id object))completion;
 
 + (void)objectWithID:(NSManagedObjectID *)objectID
-           inContext:(NSManagedObjectContext *)context
           completion:(void (^)(id object))completion;
 
-+ (void)objectWithID:(NSManagedObjectID *)objectID
-          completion:(void (^)(id object))completion;
++ (void)objectsInContext:(NSManagedObjectContext *)context
+                   where:(NSPredicate *)predicate
+                 options:(NSDictionary *)options
+              completion:(void (^)(NSArray *objects))completion;
 
-+ (void)objectsWhere:(NSPredicate *)predicate
-             options:(NSDictionary *)options
-           inContext:(NSManagedObjectContext *)context
-          completion:(void (^)(NSArray *objects))completion;
-
-+ (void)objectsWhere:(NSPredicate *)predicate
-             options:(NSDictionary *)options
-          completion:(void (^)(NSArray *objects))completion;
++ (void)objectsInContext:(NSManagedObjectContext *)context
+                   where:(NSPredicate *)predicate
+              completion:(void (^)(NSArray *objects))completion;
 
 + (void)objectsWhere:(NSPredicate *)predicate
           completion:(void (^)(NSArray *objects))completion;

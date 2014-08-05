@@ -69,8 +69,7 @@
         NSString *title = [book valueForKey:@"Title"];
         NSString *author = [book valueForKey:@"Author"];
 
-        NSPredicate *titlePred = [NSPredicate predicateWithFormat:@"title LIKE %@", title];
-        NSArray *storedBooks = [Book objectsWhere:titlePred];
+        NSArray *storedBooks = [Book objectsWhere:@"title LIKE %@", title];
         if (!storedBooks) {
             NSLog(@"Fetch book failed");
             continue;

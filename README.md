@@ -16,7 +16,5 @@ BRCoreDataStack *stack =
 // Don't use the stack before it's initialized. Observe stack.isInitialized,
 // use the completion block, or listen for the notification to know when
 // initialization is done.
-NSPredicate *titlesBeginWithB =
-    [NSPredicate predicateWithFormat:@"title BEGINSWITH[cd] 'b'"];
-NSArray *books = [Book objectsWhere:titlesBeginWithB];
+NSArray *books = [Book objectsWhere:@"title BEGINSWITH[cd] 'b'"];
 ```
