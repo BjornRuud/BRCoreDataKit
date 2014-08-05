@@ -13,10 +13,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Setup Core Data
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"Library" withExtension:@"momd"];
-    NSURL *storeURL = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] firstObject];
-    storeURL = [storeURL URLByAppendingPathComponent:@"Library.sqlite"];
-    BRCoreDataStack *stack = [[BRCoreDataStack alloc] initWithModelURL:modelURL storeURL:storeURL completion:NULL];
+    BRCoreDataStack *stack = [[BRCoreDataStack alloc] initWithName:@"Library" completion:NULL];
     [BRCoreDataStack setDefaultStack:stack];
 
     // Override point for customization after application launch.

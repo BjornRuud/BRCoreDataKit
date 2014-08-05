@@ -63,7 +63,6 @@
     NSAssert(result, @"Failed to read %@: %@", [jsonURL absoluteString], [error localizedDescription]);
 
     NSManagedObjectContext *context = [BRCoreDataStack defaultStack].privateQueueContext;
-    NSFetchRequest *fetch = [NSFetchRequest fetchRequestWithEntityName:[Book entityName]];
     NSArray *books = result[@"Books"];
     for (NSDictionary *book in books) {
         error = nil;
@@ -71,13 +70,12 @@
         NSString *author = [book valueForKey:@"Author"];
 
         NSPredicate *titlePred = [NSPredicate predicateWithFormat:@"title LIKE %@", title];
-        [fetch setPredicate:titlePred];
-        NSArray *objects = [context executeFetchRequest:fetch error:&error];
-        if (!objects) {
-            NSLog(@"Fetch book failed: %@", [error localizedDescription]);
+        NSArray *storedBooks = [Book objectsWhere:titlePred];
+        if (!storedBooks) {
+            NSLog(@"Fetch book failed");
             continue;
         }
-        Book *book = [objects lastObject];
+        Book *book = [storedBooks lastObject];
         if (!book) {
             book = [[Book alloc] initWithContext:context];
         }

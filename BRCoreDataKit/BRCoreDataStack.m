@@ -115,6 +115,16 @@ static BRCoreDataStack *_defaultStack = nil;
     return self;
 }
 
+- (instancetype)initWithName:(NSString *)name
+                  completion:(void (^)(NSError *error))completion
+{
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:name withExtension:@"momd"];
+    NSURL *storeURL = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] firstObject];
+    storeURL = [storeURL URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqlite", name]];
+
+    return [self initWithModelURL:modelURL storeURL:storeURL completion:completion];
+}
+
 - (void)dealloc
 {
     if (self.isInitialized) {

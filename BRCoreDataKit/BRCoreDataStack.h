@@ -27,6 +27,10 @@ FOUNDATION_EXPORT NSString * const BRCoreDataStackInitializedNotification;
                         storeURL:(NSURL *)storeURL
                       completion:(void (^)(NSError *error))completion;
 
+// Convenience init with single base name for model and store
+- (instancetype)initWithName:(NSString *)name
+                  completion:(void (^)(NSError *error))completion;
+
 - (NSManagedObjectContext *)contextWithConcurrencyType:(NSManagedObjectContextConcurrencyType)concurrencyType;
 
 @end

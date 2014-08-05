@@ -29,8 +29,6 @@ NSString * const BRCoreDataKitQueryOptionSortDescriptors = @"BRCoreDataKitQueryO
 
 @end
 
-#pragma mark - Asynchronous query methods
-
 @implementation NSManagedObject (BRCoreDataKitQuery)
 
 // Private helper to configure fetch requests
@@ -55,6 +53,99 @@ NSString * const BRCoreDataKitQueryOptionSortDescriptors = @"BRCoreDataKitQueryO
         [fetch setFetchOffset:[offset unsignedIntegerValue]];
     }
 }
+
+#pragma mark - Synchronous query methods
+
++ (id)objectWhere:(NSPredicate *)predicate
+          options:(NSDictionary *)options
+        inContext:(NSManagedObjectContext *)context
+{
+    NSAssert(predicate, @"Predicate required");
+    NSAssert(context, @"Context required");
+
+    NSMutableDictionary *optionsWithLimit = [NSMutableDictionary dictionaryWithDictionary:options];
+    optionsWithLimit[BRCoreDataKitQueryOptionLimit] = @1;
+
+    NSFetchRequest *fetch = [NSFetchRequest fetchRequestWithEntityName:[self entityName]];
+    [self configureFetch:fetch withPredicate:predicate options:optionsWithLimit];
+
+    __block id object = nil;
+    [context performBlockAndWait:^{
+        NSError *error = nil;
+        NSArray *objects = [context executeFetchRequest:fetch error:&error];
+        if (!objects) {
+            DLog(@"Fetch failed: %@", [error localizedDescription]);
+        }
+        object = [objects count] ? objects[0] : nil;
+    }];
+
+    return object;
+}
+
++ (id)objectWhere:(NSPredicate *)predicate
+          options:(NSDictionary *)options
+{
+    return [self objectWhere:predicate options:options inContext:[BRCoreDataStack defaultStack].privateQueueContext];
+}
+
++ (id)objectWhere:(NSPredicate *)predicate
+{
+    return [self objectWhere:predicate options:nil];
+}
+
++ (id)objectWithID:(NSManagedObjectID *)objectID
+         inContext:(NSManagedObjectContext *)context
+{
+    NSAssert(objectID, @"ObjectID required");
+    NSAssert(context, @"Context required");
+
+    __block id object = nil;
+    [context performBlockAndWait:^{
+        object = [context objectWithID:objectID];
+    }];
+
+    return object;
+}
+
++ (id)objectWithID:(NSManagedObjectID *)objectID
+{
+    return [self objectWithID:objectID inContext:[BRCoreDataStack defaultStack].privateQueueContext];
+}
+
++ (NSArray *)objectsWhere:(NSPredicate *)predicate
+                  options:(NSDictionary *)options
+                inContext:(NSManagedObjectContext *)context
+{
+    NSAssert(predicate, @"Predicate required");
+    NSAssert(context, @"Context required");
+
+    NSFetchRequest *fetch = [NSFetchRequest fetchRequestWithEntityName:[self entityName]];
+    [self configureFetch:fetch withPredicate:predicate options:options];
+
+    __block NSArray *objects = nil;
+    [context performBlockAndWait:^{
+        NSError *error = nil;
+        objects = [context executeFetchRequest:fetch error:&error];
+        if (!objects) {
+            DLog(@"Fetch failed: %@", [error localizedDescription]);
+        }
+    }];
+
+    return objects;
+}
+
++ (NSArray *)objectsWhere:(NSPredicate *)predicate
+                  options:(NSDictionary *)options
+{
+    return [self objectsWhere:predicate options:options inContext:[BRCoreDataStack defaultStack].privateQueueContext];
+}
+
++ (NSArray *)objectsWhere:(NSPredicate *)predicate
+{
+    return [self objectsWhere:predicate options:nil];
+}
+
+#pragma mark - Asynchronous query methods
 
 + (void)objectWhere:(NSPredicate *)predicate
             options:(NSDictionary *)options

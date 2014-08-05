@@ -23,6 +23,31 @@ FOUNDATION_EXPORT NSString * const BRCoreDataKitQueryOptionSortDescriptors;
 
 @interface NSManagedObject (BRCoreDataKitQuery)
 
+#pragma mark - Synchronous query methods
+
++ (id)objectWhere:(NSPredicate *)predicate
+          options:(NSDictionary *)options
+        inContext:(NSManagedObjectContext *)context;
+
++ (id)objectWhere:(NSPredicate *)predicate
+          options:(NSDictionary *)options;
+
++ (id)objectWhere:(NSPredicate *)predicate;
+
++ (id)objectWithID:(NSManagedObjectID *)objectID
+         inContext:(NSManagedObjectContext *)context;
+
++ (id)objectWithID:(NSManagedObjectID *)objectID;
+
++ (NSArray *)objectsWhere:(NSPredicate *)predicate
+                  options:(NSDictionary *)options
+                inContext:(NSManagedObjectContext *)context;
+
++ (NSArray *)objectsWhere:(NSPredicate *)predicate
+                  options:(NSDictionary *)options;
+
++ (NSArray *)objectsWhere:(NSPredicate *)predicate;
+
 #pragma mark - Asynchronous query methods
 
 + (void)objectWhere:(NSPredicate *)predicate
