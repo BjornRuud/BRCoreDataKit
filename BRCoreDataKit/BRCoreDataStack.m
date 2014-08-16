@@ -11,6 +11,8 @@
 NSString * const BRCoreDataStackErrorDomain = @"net.bjornruud.BRCoreDataStack";
 NSString * const BRCoreDataStackInitializedNotification = @"BRCoreDataStackInitializedNotification";
 
+static NSString * const MigrationBackupExtension = @"migration";
+
 static BRCoreDataStack *_defaultStack = nil;
 
 @interface BRCoreDataStack ()
@@ -37,6 +39,7 @@ static BRCoreDataStack *_defaultStack = nil;
 
 - (instancetype)initWithModelURL:(NSURL *)modelURL
                         storeURL:(NSURL *)storeURL
+                       storeType:(NSString *)storeType
                       completion:(void (^)(NSError *error))completion
 {
     self = [super init];
@@ -60,6 +63,21 @@ static BRCoreDataStack *_defaultStack = nil;
                 return;
             }
             DLog(@"Managed Object Model initialized");
+
+            NSError *migrationError = nil;
+            if ([storeURL checkResourceIsReachableAndReturnError:NULL] &&
+                ![self migrateStore:storeURL ofType:storeType toModel:modelURL error:&migrationError])
+            {
+                if (completion) {
+                    dispatch_async(mainQueue, ^{
+                        NSString *message = NSLocalizedString(@"Failed to migrate object store %@: %@", nil);
+                        message = [NSString stringWithFormat:message, [storeURL absoluteString], [migrationError localizedDescription]];
+                        completion([self errorWithMessage:message]);
+                    });
+                }
+                return;
+            }
+            DLog(@"Managed Object Store migrated");
 
             NSPersistentStoreCoordinator *psc = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:mom];
             if (!psc) {
@@ -122,7 +140,7 @@ static BRCoreDataStack *_defaultStack = nil;
     NSURL *storeURL = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] firstObject];
     storeURL = [storeURL URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqlite", name]];
 
-    return [self initWithModelURL:modelURL storeURL:storeURL completion:completion];
+    return [self initWithModelURL:modelURL storeURL:storeURL storeType:NSSQLiteStoreType completion:completion];
 }
 
 - (void)dealloc
@@ -150,6 +168,122 @@ static BRCoreDataStack *_defaultStack = nil;
     return [NSError errorWithDomain:BRCoreDataStackErrorDomain
                                code:0
                            userInfo:@{NSLocalizedDescriptionKey: message}];
+}
+
+- (BOOL)migrateStore:(NSURL *)storeURL ofType:(NSString *)storeType toModel:(NSURL *)finalModelURL error:(NSError **)error
+{
+    // Get all models
+    NSManagedObjectModel *finalModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:finalModelURL];
+    NSArray *modelURLs = [[NSBundle mainBundle] URLsForResourcesWithExtension:@"mom"
+                                                                  subdirectory:[finalModelURL lastPathComponent]];
+    modelURLs = [modelURLs sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        return [[obj1 absoluteString] localizedCompare:[obj2 absoluteString]];
+    }];
+    NSMutableArray *models = [NSMutableArray array];
+    for (NSURL *modelURL in modelURLs) {
+        NSManagedObjectModel *model = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+        [models addObject:model];
+    }
+
+    // Find which model the store is built with
+    NSDictionary *metaData = [NSPersistentStoreCoordinator
+                              metadataForPersistentStoreOfType:storeType
+                              URL:storeURL
+                              error:error];
+    if (!metaData) {
+        return NO;
+    }
+    NSManagedObjectModel *sourceModel = nil;
+    for (NSManagedObjectModel *model in [models copy]) {
+        [models removeObjectAtIndex:0];
+        if ([model isConfiguration:nil compatibleWithStoreMetadata:metaData]) {
+            sourceModel = model;
+            break;
+        }
+    }
+    if (!sourceModel) {
+        NSString *msg = NSLocalizedString(@"Managed object model used to create persistent store not found.", nil);
+        *error = [self errorWithMessage:msg];
+        return NO;
+    }
+
+    while (![sourceModel isEqual:finalModel]) {
+        // Make sure potential destination models are available
+        if (models.count < 1) {
+            NSString *msg = NSLocalizedString(@"No more potential destination models.", nil);
+            *error = [self errorWithMessage:msg];
+            return NO;
+        }
+
+        // Get destination model
+        NSManagedObjectModel *destinationModel = models[0];
+        [models removeObjectAtIndex:0];
+
+        // Attempt lightweight migration first
+        NSMappingModel *inferredModel = [NSMappingModel
+                                         inferredMappingModelForSourceModel:sourceModel
+                                         destinationModel:destinationModel
+                                         error:NULL];
+        if (inferredModel) {
+            // Inferred mapping possible, continue with lightweight migration
+            NSPersistentStoreCoordinator *psc = [[NSPersistentStoreCoordinator alloc]
+                                                 initWithManagedObjectModel:destinationModel];
+            NSPersistentStore *store = [psc
+                                        addPersistentStoreWithType:storeType
+                                        configuration:nil
+                                        URL:storeURL
+                                        options:@{NSMigratePersistentStoresAutomaticallyOption: @YES,
+                                                  NSInferMappingModelAutomaticallyOption: @YES}
+                                        error:error];
+            if (store) {
+                // Lightweight migration was successfull
+                sourceModel = destinationModel;
+                continue;
+            } else {
+                return NO;
+            }
+        }
+
+        // Light migration didn't work, try heavy migration
+        NSMappingModel *mappingModel = [NSMappingModel
+                                        mappingModelFromBundles:@[[NSBundle mainBundle]]
+                                        forSourceModel:sourceModel
+                                        destinationModel:destinationModel];
+        // Should have a mapping model now
+        if (!mappingModel) {
+            NSString *msg = NSLocalizedString(@"Mapping model for heavy migration not found.", nil);
+            *error = [self errorWithMessage:msg];
+            return NO;
+        }
+
+        // Perform migration
+        NSFileManager *fm = [NSFileManager defaultManager];
+        NSMigrationManager *manager = [[NSMigrationManager alloc]
+                                       initWithSourceModel:sourceModel
+                                       destinationModel:destinationModel];
+        NSURL *destinationURL = [storeURL URLByAppendingPathExtension:MigrationBackupExtension];
+        if (![manager migrateStoreFromURL:storeURL
+                                type:storeType
+                             options:nil
+                    withMappingModel:mappingModel
+                    toDestinationURL:destinationURL
+                     destinationType:storeType
+                  destinationOptions:nil
+                               error:error])
+        {
+            [fm removeItemAtURL:destinationURL error:NULL];
+            return NO;
+        }
+
+        // Migration successfull. Replace source with destination.
+        [fm removeItemAtURL:storeURL error:NULL];
+        [fm moveItemAtURL:destinationURL toURL:storeURL error:NULL];
+
+        // Set destination as source and do next migration
+        sourceModel = destinationModel;
+    }
+
+    return YES;
 }
 
 #pragma mark - Context save handler

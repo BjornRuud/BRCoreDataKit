@@ -43,6 +43,7 @@
 		8E39DD891990F8130069AB14 /* libBRCoreDataKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E39DD03198FBEA20069AB14 /* libBRCoreDataKit.a */; };
 		8E39DD8B1990F9CB0069AB14 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E39DD8A1990F9CB0069AB14 /* CoreData.framework */; };
 		8E39DD8C1990F9E00069AB14 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E39DD8A1990F9CB0069AB14 /* CoreData.framework */; };
+		8E6951E6199FA30C002DA9B0 /* Migrate2to3.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 8E6951E5199FA30C002DA9B0 /* Migrate2to3.xcmappingmodel */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -120,6 +121,9 @@
 		8E39DD831990F3510069AB14 /* Book.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Book.m; path = Model/Book.m; sourceTree = "<group>"; };
 		8E39DD861990F4830069AB14 /* Model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Model.h; path = Model/Model.h; sourceTree = "<group>"; };
 		8E39DD8A1990F9CB0069AB14 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		8E6951E2199E7D99002DA9B0 /* Library 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Library 2.xcdatamodel"; sourceTree = "<group>"; };
+		8E6951E3199F9567002DA9B0 /* Library 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Library 3.xcdatamodel"; sourceTree = "<group>"; };
+		8E6951E5199FA30C002DA9B0 /* Migrate2to3.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; name = Migrate2to3.xcmappingmodel; path = Migration/Migrate2to3.xcmappingmodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -254,6 +258,7 @@
 		8E39DD431990EB340069AB14 /* BRCoreDataKitDemo */ = {
 			isa = PBXGroup;
 			children = (
+				8E6951E4199FA2A1002DA9B0 /* Migration */,
 				8E39DD811990F3260069AB14 /* Model */,
 				8E39DD751990ED110069AB14 /* Books.json */,
 				8E39DD761990ED110069AB14 /* DemoBooksViewController.h */,
@@ -306,6 +311,14 @@
 				8E39DD861990F4830069AB14 /* Model.h */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		8E6951E4199FA2A1002DA9B0 /* Migration */ = {
+			isa = PBXGroup;
+			children = (
+				8E6951E5199FA30C002DA9B0 /* Migrate2to3.xcmappingmodel */,
+			);
+			name = Migration;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -477,6 +490,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8E39DD841990F3510069AB14 /* Book.m in Sources */,
+				8E6951E6199FA30C002DA9B0 /* Migrate2to3.xcmappingmodel in Sources */,
 				8E39DD4E1990EB340069AB14 /* AppDelegate.m in Sources */,
 				8E39DD4A1990EB340069AB14 /* main.m in Sources */,
 				8E39DD7C1990ED110069AB14 /* DemoBooksViewController.m in Sources */,
@@ -794,6 +808,7 @@
 				8E39DD28198FBEA20069AB14 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		8E39DD29198FBEA20069AB14 /* Build configuration list for PBXNativeTarget "BRCoreDataKitTests" */ = {
 			isa = XCConfigurationList;
@@ -802,6 +817,7 @@
 				8E39DD2B198FBEA20069AB14 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		8E39DD6F1990EB350069AB14 /* Build configuration list for PBXNativeTarget "BRCoreDataKitDemo" */ = {
 			isa = XCConfigurationList;
@@ -810,6 +826,7 @@
 				8E39DD711990EB350069AB14 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		8E39DD721990EB350069AB14 /* Build configuration list for PBXNativeTarget "BRCoreDataKitDemoTests" */ = {
 			isa = XCConfigurationList;
@@ -818,6 +835,7 @@
 				8E39DD741990EB350069AB14 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
@@ -825,9 +843,11 @@
 		8E39DD781990ED110069AB14 /* Library.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				8E6951E3199F9567002DA9B0 /* Library 3.xcdatamodel */,
+				8E6951E2199E7D99002DA9B0 /* Library 2.xcdatamodel */,
 				8E39DD791990ED110069AB14 /* Library.xcdatamodel */,
 			);
-			currentVersion = 8E39DD791990ED110069AB14 /* Library.xcdatamodel */;
+			currentVersion = 8E6951E3199F9567002DA9B0 /* Library 3.xcdatamodel */;
 			path = Library.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
