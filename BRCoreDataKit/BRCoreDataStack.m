@@ -44,8 +44,7 @@ static BRCoreDataStack *_defaultStack = nil;
 {
     self = [super init];
     if (self) {
-        // Do CoreData setup asynchronously since attaching a persistent store to a coordinator
-        // might trigger migration, which can take some time depending on its complexity.
+        // Do CoreData setup asynchronously since store migration might take some time
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         dispatch_async(queue, ^{
             DLog(@"Begin Core Data setup");
@@ -92,7 +91,7 @@ static BRCoreDataStack *_defaultStack = nil;
             DLog(@"Persistent Store Coordinator initialized");
 
             NSError *error = nil;
-            NSPersistentStore *store = [psc addPersistentStoreWithType:NSSQLiteStoreType
+            NSPersistentStore *store = [psc addPersistentStoreWithType:storeType
                                                          configuration:nil
                                                                    URL:storeURL
                                                                options:nil
