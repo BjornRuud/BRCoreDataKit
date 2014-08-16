@@ -1,6 +1,6 @@
 # BRCoreDataKit
 
-A minimalistic CoreData stack for iOS and OS X, and an assortment of categories that make life with CoreData easier.
+A minimalistic Core Data stack for iOS, and an assortment of categories that make life with Core Data easier.
 
 ## Usage
 
@@ -18,3 +18,9 @@ BRCoreDataStack *stack =
 // initialization is done.
 NSArray *books = [Book objectsWhere:@"title BEGINSWITH[cd] 'b'"];
 ```
+
+## Data Migration
+
+Migration is automatic and done progressively from one model version to the next. There is only one requirement: all model versions must be named in such a way that they can be sorted alphanumerically in the same order as the version progression.
+
+Light migration is always attempted first, and if that fails heavy migration is attempted. For heavy migration to work all required mapping models must be located in the main bundle.
