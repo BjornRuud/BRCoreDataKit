@@ -7,6 +7,7 @@
 //
 
 #import "BRCoreDataStack.h"
+#import "BRDebug.h"
 
 NSString * const BRCoreDataStackErrorDomain = @"net.bjornruud.BRCoreDataStack";
 NSString * const BRCoreDataStackInitializedNotification = @"BRCoreDataStackInitializedNotification";

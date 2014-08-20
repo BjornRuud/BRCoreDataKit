@@ -7,6 +7,7 @@
 //
 
 #import "BRCoreDataStack.h"
+#import "BRDebug.h"
 #import "NSManagedObject+BRCoreDataKit.h"
 
 NSString * const BRCoreDataKitQueryOptionBatchSize = @"BRCoreDataKitQueryOptionBatchSize";
